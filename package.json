@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/toivoparnpuu/ProgII-tund#readme",
   "dependencies": {
+    "express": "^4.18.1",
     "typescript": "^4.8.3"
   },
   "devDependencies": {
