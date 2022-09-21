@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/toivoparnpuu/ProgII-tund/issues"
   },
-  "homepage": "https://github.com/toivoparnpuu/ProgII-tund#readme"
+  "homepage": "https://github.com/toivoparnpuu/ProgII-tund#readme",
+  "dependencies": {
+    "typescript": "^4.8.3"
+  }
 }
