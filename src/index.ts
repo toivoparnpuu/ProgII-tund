@@ -5,6 +5,7 @@ import { INewComment, IComment } from "./components/comments/interfaces";
 import { IPostStatus } from './components/poststatus/interfaces';
 import { users, postStatuses, posts, comments } from './mockData';
 import usersServices from './components/users/services';
+import usersControllers from './components/users/controllers';
 
 const app = express();
 const PORT = 3000;
@@ -26,7 +27,7 @@ Kasutajatega seotud endpoindid
 
 
 // Kõikide kasutajate pärimise endpoint
-app.get('/api/v1/users', );
+app.get('/api/v1/users', usersControllers.getAllUsers);
 
 // Kasutaja pärimine id alusel
 app.get('/api/v1/users/:id', (req: Request, res: Response) => {
