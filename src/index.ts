@@ -25,30 +25,11 @@ Kasutajatega seotud endpoindid
 --------------------------------------------------
 */
 
-
 // Kõikide kasutajate pärimise endpoint
 app.get('/api/v1/users', usersControllers.getAllUsers);
 
 // Kasutaja pärimine id alusel
-app.get('/api/v1/users/:id', (req: Request, res: Response) => {
-    const id = parseInt(req.params.id);
-    let user: IUserWithPassword | undefined = usersServices.findUserById(id);
-    if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: `User not found`,
-        });
-    }
-    const userWithoutPassword = usersServices.getUserWithoutPassword(user);
-
-    return res.status(200).json({
-        success: true,
-        message: `User`,
-        data: {
-            user: userWithoutPassword
-        },
-    });
-});
+app.get('/api/v1/users/:id', usersControllers.getUserById);
 
 // Kasutaja muutmine
 app.patch('/api/v1/users/:id', (req: Request, res: Response) => {
