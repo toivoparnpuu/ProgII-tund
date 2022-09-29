@@ -2,15 +2,18 @@ interface INewUser {
     firstName: string;
     lastName: string;
     email: string;
+    password: string;
 }
 
 interface IUser extends INewUser {
     id: number;
 }
 
-interface IUserWithPassword extends IUser {
-    password: string;
+interface IUserWithoutPassword {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
 }
 
-//moodutan ühe objekti kuhu sisse lisan interface-d
-export { INewUser, IUser, IUserWithPassword};
+export { INewUser, IUser, IUserWithoutPassword };

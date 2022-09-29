@@ -1,18 +1,18 @@
 import express, { Request, Response } from 'express';
-import { INewUser, IUser, IUserWithPassword } from "./components/users/interfaces";
-import { INewPost, IPost } from "./components/posts/interfaces";
-import { INewComment, IComment } from "./components/comments/interfaces";
-import { IPostStatus } from './components/poststatus/interfaces';
+import { INewUser, IUser } from './components/users/interfaces';
+import { IPost, INewPost } from './components/posts/interfaces';
+import { IComment, INewComment } from './components/comments/interfaces';
 import { users, postStatuses, posts, comments } from './mockData';
 import usersServices from './components/users/services';
 import usersControllers from './components/users/controllers';
+import { IPostStatus } from './components/poststatus/interfaces';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-// Endpoint API töötamise kontrollimisek
+// Endpoint API töötamise kontrollimiseks
 app.get('/api/v1/health', (req: Request, res: Response) => {
     res.status(200).json({
         message: 'Hello world!',
@@ -25,17 +25,21 @@ Kasutajatega seotud endpoindid
 --------------------------------------------------
 */
 
+
 // Kõikide kasutajate pärimise endpoint
 app.get('/api/v1/users', usersControllers.getAllUsers);
 
 // Kasutaja pärimine id alusel
 app.get('/api/v1/users/:id', usersControllers.getUserById);
 
+// Kasutaja loomine
+app.post('/api/v1/users', usersControllers.createUser);
+
 // Kasutaja muutmine
 app.patch('/api/v1/users/:id', (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const { firstName, lastName, email, password } = req.body;
-    const user: IUserWithPassword | undefined = usersServices.findUserById(id);
+    const user: IUser | undefined = usersServices.findUserById(id);
     if (!user) {
         return res.status(404).json({
             success: false,
@@ -57,31 +61,6 @@ app.patch('/api/v1/users/:id', (req: Request, res: Response) => {
     return res.status(200).json({
         success: true,
         message: `User updated`,
-    });
-});
-
-// Kasutaja loomine
-app.post('/api/v1/users', (req: Request, res: Response) => {
-    const { firstName, lastName, email, password } = req.body;
-    if (!firstName || !lastName || !email || !password) {
-        return res.status(400).json({
-            success: false,
-            message: `Some data is missing (firstName, lastName, email, password)`,
-        });
-    }
-    const id = users.length + 1;
-    const newUser: IUserWithPassword = {
-        id,
-        firstName,
-        lastName,
-        email,
-        password
-    };
-    users.push(newUser);
-
-    return res.status(201).json({
-        success: true,
-        message: `User with id ${newUser.id} created`,
     });
 });
 
@@ -259,7 +238,7 @@ Kommentaaridega seotud endpoindid
 // Kõikide kommentaaride pärimise endpoint
 app.get('/api/v1/comments', (req: Request, res: Response) => {
     const commentsWithUsers = comments.map(comment => {
-        let user: IUserWithPassword | undefined = usersServices.findUserById(comment.id);
+        let user: IUser | undefined = usersServices.findUserById(comment.id);
         if (!user) user = usersServices.unknownUser();
         const userWithoutPassword = usersServices.getUserWithoutPassword(user);
         const commentWithUser = {
@@ -352,8 +331,6 @@ app.delete('/api/v1/comments/:id', (req: Request, res: Response) => {
     });
 });
 
-
-
 /*
 --------------------------------------------------
 Postitustega seotud funktsioonid
@@ -369,7 +346,7 @@ const findPostById = (id: number): IPost | undefined => {
 
 const getPostWithStatusAndUser = (post: IPost) => {
     const postStatus = getPostStatusById(post.statusId);
-    let user: IUserWithPassword | undefined = usersServices.findUserById(post.userId);
+    let user: IUser | undefined = usersServices.findUserById(post.userId);
     if (!user) user = usersServices.unknownUser();
     const userWithoutPassword = usersServices.getUserWithoutPassword(user);
 

@@ -1,8 +1,8 @@
-import { IUserWithPassword } from "./components/users/interfaces";
+import { IUser } from "./components/users/interfaces";
 import { INewPost, IPost } from "./components/posts/interfaces";
 import { INewComment, IComment } from "./components/comments/interfaces";
 import { IPostStatus } from "./components/poststatus/interfaces";
-const users: IUserWithPassword[] = [
+const users: IUser[] = [
     {
         id: 1,
         firstName: 'Juhan',
