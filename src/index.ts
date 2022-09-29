@@ -1,114 +1,14 @@
 import express, { Request, Response } from 'express';
+import { INewUser, IUser, IUserWithPassword } from "./components/users/interfaces";
+import { INewPost, IPost } from "./components/posts/interfaces";
+import { INewComment, IComment } from "./components/comments/interfaces";
+import { IPostStatus } from './components/poststatus/interfaces';
+import { users, postStatuses, posts, comments } from './mockData';
+
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-
-interface INewUser {
-    firstName: string;
-    lastName: string;
-    email: string;
-}
-
-interface IUser extends INewUser {
-    id: number;
-}
-
-interface IUserWithPassword extends IUser {
-    password: string;
-}
-
-interface INewPost {
-    userId: number;
-    title: string;
-    content: string;
-    statusId: number;
-}
-
-interface IPost extends INewPost {
-    id: number;
-}
-
-interface INewPostStatus {
-    status: string;
-}
-
-interface IPostStatus extends INewPostStatus {
-    id: number;
-}
-
-interface INewComment {
-    userId: number;
-    postId: number;
-    content: string;
-}
-
-interface IComment extends INewComment {
-    id: number;
-}
-
-const users: IUserWithPassword[] = [
-    {
-        id: 1,
-        firstName: 'Juhan',
-        lastName: 'Juurikas',
-        email: 'juhan@juurikas.ee',
-        password: 'juhan',
-    },
-];
-
-const posts: IPost[] = [
-    {
-        id: 1,
-        title: 'Esimene postitus',
-        content: 'Esimese postituse sisu',
-        userId: 2,
-        statusId: 7,
-    },
-    {
-        id: 2,
-        title: 'Teine postitus',
-        content: 'Teise postituse sisu',
-        userId: 1,
-        statusId: 2,
-    },
-];
-
-const postStatuses: IPostStatus[] = [
-    {
-        id: 1,
-        status: 'Draft',
-    },
-    {
-        id: 2,
-        status: 'Public',
-    },
-    {
-        id: 3,
-        status: 'Private',
-    },
-];
-
-const comments: IComment[] = [
-    {
-        id: 1,
-        userId: 1,
-        postId: 1,
-        content: 'Esimese postituse esimene kommentaar', 
-    },
-    {
-        id: 2,
-        userId: 1,
-        postId: 2,
-        content: 'Teise postituse esimene kommentaar', 
-    },
-    {
-        id: 3,
-        userId: 1,
-        postId: 2,
-        content: 'Teise postituse teine kommentaar', 
-    },
-]
 
 // Endpoint API töötamise kontrollimisek
 app.get('/api/v1/health', (req: Request, res: Response) => {
