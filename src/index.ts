@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { INewUser, IUser } from './components/users/interfaces';
 import { IPost, INewPost } from './components/posts/interfaces';
 import { IComment, INewComment } from './components/comments/interfaces';
@@ -12,12 +12,27 @@ const PORT = 3000;
 
 app.use(express.json());
 
+//middleware defineerimine logger
+const logger = (req: Request, res: Response, next: NextFunction) => {
+  console.log(`${req.method} ${req.url} ${new Date().toISOString()}`)
+  next();
+};
+
+
 // Endpoint API töötamise kontrollimiseks
+// app.get('/api/v1/health', logger, (req: Request, res: Response) =>
+
+
 app.get('/api/v1/health', (req: Request, res: Response) => {
-    res.status(200).json({
+  res.status(200).json({
         message: 'Hello world!',
     });
 });
+
+
+
+
+app.use(logger);
 
 /*
 --------------------------------------------------
