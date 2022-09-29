@@ -4,6 +4,7 @@ import { INewPost, IPost } from "./components/posts/interfaces";
 import { INewComment, IComment } from "./components/comments/interfaces";
 import { IPostStatus } from './components/poststatus/interfaces';
 import { users, postStatuses, posts, comments } from './mockData';
+import usersServices from './components/users/services';
 
 const app = express();
 const PORT = 3000;
@@ -27,7 +28,7 @@ Kasutajatega seotud endpoindid
 // Kõikide kasutajate pärimise endpoint
 app.get('/api/v1/users', (req: Request, res: Response) => {
     const usersWithoutPassword = users.map(user => {
-        const userWithoutPassword = getUserWithoutPassword(user);
+        const userWithoutPassword = usersServices.getUserWithoutPassword(user);
         return userWithoutPassword;
     });
     res.status(200).json({
@@ -40,14 +41,14 @@ app.get('/api/v1/users', (req: Request, res: Response) => {
 // Kasutaja pärimine id alusel
 app.get('/api/v1/users/:id', (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
-    let user: IUserWithPassword | undefined = findUserById(id);
+    let user: IUserWithPassword | undefined = usersServices.findUserById(id);
     if (!user) {
         return res.status(404).json({
             success: false,
             message: `User not found`,
         });
     }
-    const userWithoutPassword = getUserWithoutPassword(user);
+    const userWithoutPassword = usersServices.getUserWithoutPassword(user);
 
     return res.status(200).json({
         success: true,
@@ -62,7 +63,7 @@ app.get('/api/v1/users/:id', (req: Request, res: Response) => {
 app.patch('/api/v1/users/:id', (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const { firstName, lastName, email, password } = req.body;
-    const user: IUserWithPassword | undefined = findUserById(id);
+    const user: IUserWithPassword | undefined = usersServices.findUserById(id);
     if (!user) {
         return res.status(404).json({
             success: false,
@@ -286,9 +287,9 @@ Kommentaaridega seotud endpoindid
 // Kõikide kommentaaride pärimise endpoint
 app.get('/api/v1/comments', (req: Request, res: Response) => {
     const commentsWithUsers = comments.map(comment => {
-        let user: IUserWithPassword | undefined = findUserById(comment.id);
-        if (!user) user = unknownUser();
-        const userWithoutPassword = getUserWithoutPassword(user);
+        let user: IUserWithPassword | undefined = usersServices.findUserById(comment.id);
+        if (!user) user = usersServices.unknownUser();
+        const userWithoutPassword = usersServices.getUserWithoutPassword(user);
         const commentWithUser = {
             id: comment.id,
             content: comment.content,
@@ -380,35 +381,6 @@ app.delete('/api/v1/comments/:id', (req: Request, res: Response) => {
 });
 
 
-/*
---------------------------------------------------
-Kasutajatega seotud funktsioonid
---------------------------------------------------
-*/
-
-const findUserById = (id: number): IUserWithPassword | undefined => {
-    let user: IUserWithPassword | undefined = users.find(element => element.id === id);
-    return user;
-};
-
-const getUserWithoutPassword = (user: IUserWithPassword): IUser => {
-    return {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-    };
-};
-
-const unknownUser = (): IUserWithPassword => {
-    return {
-            id: 0,
-            firstName: 'Jane',
-            lastName: 'Doe',
-            email: 'jane@doe.com',
-            password: 'jane',
-        };
-};
 
 /*
 --------------------------------------------------
@@ -425,9 +397,9 @@ const findPostById = (id: number): IPost | undefined => {
 
 const getPostWithStatusAndUser = (post: IPost) => {
     const postStatus = getPostStatusById(post.statusId);
-    let user: IUserWithPassword | undefined = findUserById(post.userId);
-    if (!user) user = unknownUser();
-    const userWithoutPassword = getUserWithoutPassword(user);
+    let user: IUserWithPassword | undefined = usersServices.findUserById(post.userId);
+    if (!user) user = usersServices.unknownUser();
+    const userWithoutPassword = usersServices.getUserWithoutPassword(user);
 
     const postWithStatusAndUser = {
         id: post.id,
