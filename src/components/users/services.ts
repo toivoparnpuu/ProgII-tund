@@ -29,6 +29,13 @@ const usersServices = {
                 email: 'jane@doe.com',
                 password: 'jane',
             };
+    },
+    getAllUsers : () => {
+        // võtab parooliga kasutaja, mis tagastab ilma paroolita kasutaja
+        const usersWithoutPassword = users.map(user => {
+            const userWithoutPassword = usersServices.getUserWithoutPassword(user);
+            return userWithoutPassword;
+        });
     }
 };
 
