@@ -26,17 +26,7 @@ Kasutajatega seotud endpoindid
 
 
 // Kõikide kasutajate pärimise endpoint
-app.get('/api/v1/users', (req: Request, res: Response) => {
-    const usersWithoutPassword = users.map(user => {
-        const userWithoutPassword = usersServices.getUserWithoutPassword(user);
-        return userWithoutPassword;
-    });
-    res.status(200).json({
-        success: true,
-        message: 'List of users',
-        users: usersWithoutPassword,
-    });
-});
+app.get('/api/v1/users', );
 
 // Kasutaja pärimine id alusel
 app.get('/api/v1/users/:id', (req: Request, res: Response) => {
