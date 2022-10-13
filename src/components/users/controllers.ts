@@ -31,12 +31,6 @@ const usersControllers = {
     },
     createUser: (req: Request, res: Response) => {
         const { firstName, lastName, email, password } = req.body;
-        if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: `Some data is missing (firstName, lastName, email, password)`,
-            });
-        };
         const newUser: INewUser = {
             firstName,
             lastName,
@@ -48,7 +42,54 @@ const usersControllers = {
             success: true,
             message: `User with id ${id} created`,
         });
-    }
+    },
+    updateUser: (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const { firstName, lastName, email, password } = req.body;
+        const user: IUser | undefined = usersServices.findUserById(id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: `User not found`,
+            });
+        }
+        if (!firstName && !lastName && !email && !password) {
+            return res.status(400).json({
+                success: false,
+                message: `Nothing to change`,
+            });
+        }
+
+        const userToUpdate: IUser = {
+            id,
+            firstName,
+            lastName,
+            email,
+            password,
+        };
+    
+        usersServices.updateUser(userToUpdate);
+    
+        return res.status(200).json({
+            success: true,
+            message: `User updated`,
+        });
+    },
+    deleteUser: (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        const result = usersServices.deleteUser(id);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: `User not found`,
+            });
+        }
+        
+        return res.status(200).json({
+            success: true,
+            message: `User deleted`,
+        });
+    },
 };
 
 export default usersControllers;

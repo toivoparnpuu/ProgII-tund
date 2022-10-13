@@ -1,7 +1,8 @@
+import { IComment } from "./components/comments/interfaces";
+import { IPost } from "./components/posts/interfaces";
+import { IPostStatus } from "./components/postsStatuses/interfaces";
 import { IUser } from "./components/users/interfaces";
-import { INewPost, IPost } from "./components/posts/interfaces";
-import { INewComment, IComment } from "./components/comments/interfaces";
-import { IPostStatus } from "./components/poststatus/interfaces";
+
 const users: IUser[] = [
     {
         id: 1,
@@ -63,6 +64,6 @@ const comments: IComment[] = [
         postId: 2,
         content: 'Teise postituse teine kommentaar', 
     },
-]
+];
 
-export {users, comments, postStatuses, posts}
+export { users, posts, postStatuses, comments };

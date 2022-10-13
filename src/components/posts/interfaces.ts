@@ -9,4 +9,11 @@ interface IPost extends INewPost {
     id: number;
 }
 
-export {INewPost, IPost};
+interface IPostToUpdate {
+    id: number;
+    title?: string;
+    content?: string;
+    statusId?: number;
+}
+
+export { INewPost, IPost, IPostToUpdate };

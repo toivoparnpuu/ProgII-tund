@@ -8,5 +8,4 @@ interface IComment extends INewComment {
     id: number;
 }
 
-
-export{INewComment, IComment};
+export { INewComment, IComment };
